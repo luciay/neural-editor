@@ -5,7 +5,7 @@ seed = 0
 
 editor {
     decoder_cell = AttentionDecoderCell
-    vocab_size = 81 # vocab for bach
+    vocab_size = 70 # vocab from glove
     word_dim = 300
     hidden_dim = 256  # hidden state dim of encoder and decoder
     agenda_dim = 256  # agenda vector dim
@@ -23,11 +23,11 @@ editor {
     norm_max = 7.5
     kill_edit = True
     embed_sentence = False
-    wvec_path = bach_300d.txt
+    wvec_path = haydn_300d.txt
 }
 
 dataset {
     # this path should be relative to $SQUAD_ENTAILMENT_DATA
-    path = midi_split
+    path = midi_split/haydn
     use_diff = True
 }

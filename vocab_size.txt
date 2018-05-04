@@ -1,0 +1,1 @@
+{'bach':81, 'haydn':70, 'handel':61, 'beethoven':79, 'schubert':84, 'vivaldi':63, 'mozart':85, 'brahms':93}

@@ -18,4 +18,4 @@ export TEXTMORPH_DATA=$DATA_DIR
 
 export PYTHONPATH=.:$REPO_DIR:$PYTHONPATH
 
-/share/apps/singularity/2.4.4/bin/singularity exec --nv /beegfs/work/public/singularity/textmorph-1.2.img python $REPO_DIR/textmorph/edit_model/main.py $REPO_DIR/configs/edit_model/edit_midi.txt
+/share/apps/singularity/2.5.1/bin/singularity exec --nv /beegfs/work/public/singularity/textmorph-1.2.img python $REPO_DIR/textmorph/edit_model/main.py $REPO_DIR/configs/edit_model/edit_midi.txt

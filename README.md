@@ -43,5 +43,5 @@ The `sbatch` scripts run a Singularity image of Kelvin Guu's Docker image (kelvi
 ```
 sbatch run-jupyer-gpu.sbatch
 ```
-Once in `neural-editor-completion.ipynb` notebook, set `EDIT_RUN` to the desired edit run checkpoint number located in `~/neural-editor-data/edit_runs`.
+and follow the directions. Once in `neural-editor-completion.ipynb` notebook, set `EDIT_RUN` to the desired edit run checkpoint number located in `~/neural-editor-data/edit_runs`.
 

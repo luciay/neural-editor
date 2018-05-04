@@ -114,7 +114,12 @@ class EditDataSplits(object):
 
             with codecs.open(path, 'r', encoding='utf-8') as f:
                 for line in verboserate(f, desc='Reading data file.', total=total_lines):
-                    src, trg = line.strip().lower().split('\t')
+                    # comment out original src, trg
+                    # src, trg = line.strip().lower().split('\t')
+
+                    # use new src, trg
+                    src = line.strip().lower()
+                    trg = src
                     src_words = src.split(' ')
                     trg_words = trg.split(' ')
                     assert len(src_words) > 0
@@ -127,9 +132,14 @@ class EditDataSplits(object):
                     examples.append(ex)
             return examples
 
-        self.train = examples_from_file(join(data_dir, 'train.tsv'))
-        self.valid = examples_from_file(join(data_dir, 'valid.tsv'))
-        self.test = examples_from_file(join(data_dir, 'test.tsv'))
+        # # for .tsv files
+        # self.train = examples_from_file(join(data_dir, 'train.tsv'))
+        # self.valid = examples_from_file(join(data_dir, 'valid.tsv'))
+        # self.test = examples_from_file(join(data_dir, 'test.tsv'))
+        # for .txt files
+        self.train = examples_from_file(join(data_dir, 'train.txt'))
+        self.valid = examples_from_file(join(data_dir, 'valid.txt'))
+        self.test = examples_from_file(join(data_dir, 'test.txt'))
         self.free = free
 
 

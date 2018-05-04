@@ -12,7 +12,7 @@
 #SBATCH --gres=gpu:1
 
 HOME=/home/$USER
-DATA_DIR=$HOME/neural-editor-data
+DATA_DIR=/scratch/$USER/neural-editor-data
 REPO_DIR=$HOME/neural-editor
 export TEXTMORPH_DATA=$DATA_DIR
 

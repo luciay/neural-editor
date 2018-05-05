@@ -58,7 +58,7 @@ if [ "$SLURM_JOBTMP" != "" ]; then
 fi
 
 HOME=/home/$USER
-DATA_DIR=$HOME/neural-editor-data
+DATA_DIR=/scratch/$USER/neural-editor-data
 REPO_DIR=$HOME/neural-editor
 SINGULARITY_PATH=/share/apps/singularity/2.5.1/bin/singularity
 TEXTMORPH_IMG=/beegfs/work/public/singularity/textmorph-1.2.img

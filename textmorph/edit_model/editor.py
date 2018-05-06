@@ -220,7 +220,13 @@ class EditExample(namedtuple('EditExample', ['source_words', 'insert_words', 'in
 
     @classmethod
     def from_prompt(cls):
-        get_input = lambda prompt: word_tokenize(raw_input(prompt).decode('utf-8'))
+        # if music sample, do not tokenize normally
+        init_input = lambda prompt: raw_input(prompt).decode('utf-8')
+        input_music = init_input('Is this a music sample? (true/false):\n')
+        if input_music:
+            get_input = lambda prompt: raw_input(prompt).decode('utf-8').split()
+        else:
+            get_input = lambda prompt: word_tokenize(raw_input(prompt).decode('utf-8'))
         source_words = get_input('Enter a source sentence:\n')
         whitelist = sorted(get_input('Enter whitelist (OK to leave empty):\n'))
         blacklist = sorted(get_input('Enter blacklist (OK to leave empty):\n'))

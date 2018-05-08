@@ -18,7 +18,7 @@ from fabric.api import local
 import gtd.io
 from gtd.chrono import verboserate
 from gtd.log import Metadata
-from gtd.utils import random_seed, sample_if_large, bleu, gleu, ribes, chrf, Failure, Config, chunks
+from gtd.utils import random_seed, sample_if_large, bleu, gleu, ribes, chrf, levenshtein_distance, Failure, Config, chunks
 from gtd.ml.training_run import TrainingRunWorkspace, TrainingRuns
 from gtd.ml.torch.training_run import TorchTrainingRun
 from textmorph import data
@@ -506,9 +506,10 @@ class EditTrainingRun(TorchTrainingRun):
             log_value('gleu_{}{}'.format(big_str, name), avg_gleu, train_steps)
             log_value('ribes_{}{}'.format(big_str, name), avg_ribes, train_steps)
             log_value('chrf_{}{}'.format(big_str, name), avg_chrf, train_steps)
+            log_value('dist_{}{}'.format(big_str, name), avg_dist, train_steps)
 
             print '=== {}{} ==='.format(big_str, name)
-            print 'loss: {}, bleu: {}, gleu: {}, ribes: {}, chrf: {}'.format(loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf)
+            print 'loss: {}, bleu: {}, gleu: {}, ribes: {}, chrf: {}, dist: {}'.format(loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, avg_dist)
 
             # print traces for the small evaluation
             if not big_eval:
@@ -541,7 +542,7 @@ class EditTrainingRun(TorchTrainingRun):
 
         # compute BLEU score and log to TensorBoard
         outputs, edit_traces = editor.edit(noised_sample)
-        bleus, gleus, ribeses, chrfs = [], [], [], []
+        bleus, gleus, ribeses, chrfs, dists = [], [], [], [], []
 
         for ex, output in izip(noised_sample, outputs):
             # outputs is a list(over batches)[ list(over beams) [ list(over tokens) [ unicode ] ] ] object.
@@ -549,8 +550,10 @@ class EditTrainingRun(TorchTrainingRun):
             gleus.append(gleu(ex.target_words, output[0]))
             ribeses.append(ribes(ex.target_words, output[0]))
             chrfs.append(chrf(ex.target_words, output[0]))
+            dists.append(levenshtein_distance(chrf(ex.target_words, output[0])))
         avg_bleu = np.mean(bleus)
         avg_gleu = np.mean(gleus)
         avg_ribes = np.mean(ribeses)
         avg_chrf = np.mean(chrfs)
-        return loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, edit_traces
+        avg_dist = np.mean(dists)
+        return loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, avg_dist, edit_traces

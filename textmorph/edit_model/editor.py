@@ -130,7 +130,7 @@ class Editor(Module):
             raise Exception('test_batch called with example list of length < 2')
         print 'Passed batching test'
 
-    def edit(self, examples, max_seq_length=35, beam_size=5, batch_size=256):
+    def edit(self, examples, max_seq_length=100, beam_size=5, batch_size=256):
         """Performs edits on a batch of source sentences.
 
         Args:

@@ -52,6 +52,7 @@ class EditTrainingRuns(TrainingRuns):
         gleu = meta.get('gleu_valid', None)
         ribes = meta.get('ribes_valid', None)
         chrf = meta.get('chrf_valid', None)
+        dist = meta.get('dist_valid', None)
         loss = meta.get('loss_valid', None)
         dirty_repo = meta.get('dirty_repo', '?')
 
@@ -59,9 +60,9 @@ class EditTrainingRuns(TrainingRuns):
         config = Config.from_file(workspace.config)
         dataset = config.dataset.path
 
-        return '{name:10} -- steps: {steps:<10}, loss: {loss:.2f}, dset: {dset:15}, bleu: {bleu:.2f}, gleu: {gleu:.2f}, ribes: {ribes:.2f}, chrf: {chrf:.2f} ' \
+        return '{name:10} -- steps: {steps:<10}, loss: {loss:.2f}, dset: {dset:15}, bleu: {bleu:.2f}, gleu: {gleu:.2f}, ribes: {ribes:.2f}, chrf: {chrf:.2f}, dist: {dist:.2f} ' \
                'dirty_repo: {dirty_repo}'.format(
-                name=name, dset=dataset, steps=steps, loss=loss, bleu=bleu, gleu=gleu, ribes=ribes, chrf=chrf, dirty_repo=dirty_repo)
+                name=name, dset=dataset, steps=steps, loss=loss, bleu=bleu, gleu=gleu, ribes=ribes, chrf=chrf, dist=dist, dirty_repo=dirty_repo)
 
     def summarize(self, fmt=None, verbose=False):
         if fmt is None:
@@ -496,7 +497,7 @@ class EditTrainingRun(TorchTrainingRun):
             big_str = 'big_' if big_eval else ''
 
             # compute metrics
-            loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, edit_traces = cls._compute_metrics(editor, examples, num_eval, noiser,
+            loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, avg_dist, edit_traces = cls._compute_metrics(editor, examples, num_eval, noiser,
                                                                edit_dropout=config.editor.edit_dropout,
                                                                draw_samples=config.editor.enable_vae)
 
@@ -550,7 +551,7 @@ class EditTrainingRun(TorchTrainingRun):
             gleus.append(gleu(ex.target_words, output[0]))
             ribeses.append(ribes(ex.target_words, output[0]))
             chrfs.append(chrf(ex.target_words, output[0]))
-            dists.append(levenshtein_distance(chrf(ex.target_words, output[0])))
+            dists.append(levenshtein_distance(ex.target_words, output[0]))
         avg_bleu = np.mean(bleus)
         avg_gleu = np.mean(gleus)
         avg_ribes = np.mean(ribeses)

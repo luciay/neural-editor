@@ -982,6 +982,29 @@ def softmax(logits):
     probs = exp_logits / np.sum(exp_logits)
     return probs
 
+def levenshtein_distance(reference, predict):
+    """
+    Compute the distance between the two vectors using levenshtein_distance
+
+    Returns 1 - (#correct/total_characters) giving [0.0, 1.0] where 1.0 is exactly the same
+    """
+    from nltk.metrics.distance import edit_distance
+
+    if len(predict) == 0:
+        if len(reference) == 0:
+           return 1.0
+        else :
+           return 0.0
+
+    e_distance = 0.0
+    char_count = 0
+    for i in range(0, len(reference)):
+        if reference[i] and predict[i]:
+                char_count += max(len(reference[i]), len(predict[i]))
+                e_distance += edit_distance(reference[i], predict[i])
+
+    print 'levenshtein_distance: ', 1-(e_distance/char_count)
+    return 1-(e_distance/char_count)
 
 def bleu(reference, predict):
     """Compute sentence-level bleu score.
@@ -1082,27 +1105,6 @@ def chrf(reference, predict):
             return 0.0
 
     return chrf_score.sentence_chrf(reference, predict)
-
-
-def levenshtein_distance(referece, predict):
-   “Compute the distance between the two vectors using levenshtein_distance”
-   from nltk.metrics.distance import edit_distance
-   if len(predict) == 0:
-       if len(reference) == 0:
-           return 1.0
-       else :
-           return 0.0
-   distance = 0.0
-
-   char_count = 0
-   for i in range(0, len(predict)):
-       if reference[i] and predict[i]:
-                char_count += len(reference[i]))
-                e_distance += edit_distance(reference[i], predict[i])
-   # return 1 - (#correct/total_characters)
-   # where 1.0 means exactly the same, and 0.0 means completely different
-   return 1-(e_distance/char_count)
-
 
 
 class ComparableMixin(object):

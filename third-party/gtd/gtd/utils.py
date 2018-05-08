@@ -1042,7 +1042,7 @@ def ribes(reference, hypothesis):
     best_ribes = -1.0
     alpha = 0.25
     beta = 0.10
-    
+
     # Collects the *worder* from the ranked correlation alignments.
     worder = ribes_score.word_rank_alignment(reference, hypothesis)
 
@@ -1052,18 +1052,18 @@ def ribes(reference, hypothesis):
         return 0.0
     else:
         nkt = ribes_score.spearman_rho(worder)
-        
+
     # Calculates the brevity penalty
     bp = min(1.0, math.exp(1.0 - len(reference)/len(hypothesis)))
-    
+
     # Calculates the unigram precision, *p1*
     p1 = len(worder) / len(hypothesis)
-    
+
     _ribes = nkt * (p1 ** alpha) *  (bp ** beta)
-    
+
     if _ribes > best_ribes: # Keeps the best score.
         best_ribes = _ribes
-        
+
     return best_ribes
 
 def chrf(reference, predict):
@@ -1082,6 +1082,27 @@ def chrf(reference, predict):
             return 0.0
 
     return chrf_score.sentence_chrf(reference, predict)
+
+
+def levenshtein_distance(referece, predict):
+   “Compute the distance between the two vectors using levenshtein_distance”
+   from nltk.metrics.distance import edit_distance
+   if len(predict) == 0:
+       if len(reference) == 0:
+           return 1.0
+       else :
+           return 0.0
+   distance = 0.0
+
+   char_count = 0
+   for i in range(0, len(predict)):
+       if reference[i] and predict[i]:
+                char_count += len(reference[i]))
+                e_distance += edit_distance(reference[i], predict[i])
+   # return 1 - (#correct/total_characters)
+   # where 1.0 means exactly the same, and 0.0 means completely different
+   return 1-(e_distance/char_count)
+
 
 
 class ComparableMixin(object):

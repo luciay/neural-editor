@@ -130,7 +130,7 @@ class Editor(Module):
             raise Exception('test_batch called with example list of length < 2')
         print 'Passed batching test'
 
-    def edit(self, examples, max_seq_length=100, beam_size=5, batch_size=256):
+    def edit(self, examples, max_seq_length=32, beam_size=5, batch_size=256):
         """Performs edits on a batch of source sentences.
 
         Args:
@@ -265,19 +265,14 @@ class EditExample(namedtuple('EditExample', ['source_words', 'insert_words', 'in
         Returns:
             EditExample
         """
-        # # original function
-        # src_set, trg_set = set(src_words), set(trg_words)
-        # insert_words = sorted(trg_set - src_set - free_set)
-        # delete_words = sorted(src_set - trg_set - free_set)
-
-       
+        
+        # for sentence/music completion       
         trg_words = src_words
-        #  # sentence completion
-        # if len(src_words) > 5:
-        #     src_words = src_words[:-5]
+
         # music completion
-        if len(src_words) > 10:
-            src_words = src_words[:-10]
+        if len(src_words) > 12:
+            # masking middle 8 notes
+            src_words = src_words[:6] + src_words[-6:]
         src_set, trg_set = set(src_words), set(trg_words)
         insert_words = sorted(trg_set - src_set - free_set)
         delete_words = sorted(src_set - trg_set - free_set)

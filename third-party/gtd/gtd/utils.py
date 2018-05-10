@@ -998,12 +998,23 @@ def levenshtein_distance(reference, predict):
 
     e_distance = 0.0
     char_count = 0
-    for i in range(0, len(reference)):
-        if reference[i] and predict[i]:
-                char_count += max(len(reference[i]), len(predict[i]))
-                e_distance += edit_distance(reference[i], predict[i])
 
-    print 'levenshtein_distance: ', 1-(e_distance/char_count)
+    word_diff = abs(len(reference) - len(predict))
+
+    for i in range(0, min(len(reference), len(predict))):
+        char_count += max(len(reference[i]), len(predict[i]))
+        e_distance += edit_distance(reference[i], predict[i])
+
+    char_diff = 0
+    if len(reference) < len(predict):
+        char_diff = sum(len(word) for word in (predict[-word_diff:]))
+    elif len(reference) > len(predict):
+        char_diff = sum(len(word) for word in (reference[-word_diff:]))
+
+    char_count += char_diff
+    e_distance += char_diff
+
+    print('levenshtein_distance: ', 1-(e_distance/char_count))
     return 1-(e_distance/char_count)
 
 def bleu(reference, predict):

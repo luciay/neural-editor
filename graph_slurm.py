@@ -6,9 +6,10 @@ import seaborn as sns
 import re
 
 # set path to where .txt output is stored
-print "The current working directory is", os.getcwd()
+print("The current working directory is", os.getcwd())
 
-dataset = ['one_billion', 'yelp']
+# dataset = ['schubert', 'vivaldi', 'brahms', 'haydn']
+dataset = ['billion']
 for d in dataset:
 	# specify txt directory
 	METRICS_PATH = os.getcwd() + '/' + d + '.txt'

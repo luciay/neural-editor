@@ -23,7 +23,7 @@ editor {
     norm_max = 7.5
     kill_edit = True
     embed_sentence = False
-    wvec_path = brahms_300d.txt
+    wvec_path = mono/brahms_300d.txt
 }
 
 dataset {

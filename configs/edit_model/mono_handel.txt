@@ -23,7 +23,7 @@ editor {
     norm_max = 7.5
     kill_edit = True
     embed_sentence = False
-    wvec_path = handel_300d.txt
+    wvec_path = mono/handel_300d.txt
 }
 
 dataset {

@@ -23,7 +23,7 @@ editor {
     norm_max = 7.5
     kill_edit = True
     embed_sentence = False
-    wvec_path = beethoven_300d.txt
+    wvec_path = poly/beethoven_300d.txt
 }
 
 dataset {

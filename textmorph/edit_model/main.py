@@ -18,6 +18,7 @@ args = arg_parser.parse_args()
 experiments = EditTrainingRuns(check_commit=(args.check_commit=='strict'))
 
 exp_id = args.exp_id
+print 'exp_id ', exp_id
 if exp_id == ['default']:
     # new default experiment
     exp = experiments.new()

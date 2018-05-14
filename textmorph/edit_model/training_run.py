@@ -49,9 +49,9 @@ class EditTrainingRuns(TrainingRuns):
         # metadata
         meta = Metadata.from_file(workspace.metadata)
         bleu = meta.get('bleu_valid', None)
-        gleu = meta.get('gleu_valid', None)
-        ribes = meta.get('ribes_valid', None)
-        chrf = meta.get('chrf_valid', None)
+        # gleu = meta.get('gleu_valid', None)
+        # ribes = meta.get('ribes_valid', None)
+        # chrf = meta.get('chrf_valid', None)
         dist = meta.get('dist_valid', None)
         loss = meta.get('loss_valid', None)
         dirty_repo = meta.get('dirty_repo', '?')
@@ -60,9 +60,12 @@ class EditTrainingRuns(TrainingRuns):
         config = Config.from_file(workspace.config)
         dataset = config.dataset.path
 
-        return '{name:10} -- steps: {steps:<10}, loss: {loss:.2f}, dset: {dset:15}, bleu: {bleu:.2f}, gleu: {gleu:.2f}, ribes: {ribes:.2f}, chrf: {chrf:.2f}, dist: {dist:.2f} ' \
+        # return '{name:10} -- steps: {steps:<10}, loss: {loss:.2f}, dset: {dset:15}, bleu: {bleu:.2f}, gleu: {gleu:.2f}, ribes: {ribes:.2f}, chrf: {chrf:.2f}, dist: {dist:.2f} ' \
+        #        'dirty_repo: {dirty_repo}'.format(
+        #         name=name, dset=dataset, steps=steps, loss=loss, bleu=bleu, gleu=gleu, ribes=ribes, chrf=chrf, dist=dist, dirty_repo=dirty_repo)
+        return '{name:10} -- steps: {steps:<10}, loss: {loss:.2f}, dset: {dset:15}, bleu: {bleu:.2f}, dist: {dist:.2f} ' \
                'dirty_repo: {dirty_repo}'.format(
-                name=name, dset=dataset, steps=steps, loss=loss, bleu=bleu, gleu=gleu, ribes=ribes, chrf=chrf, dist=dist, dirty_repo=dirty_repo)
+                name=name, dset=dataset, steps=steps, loss=loss, bleu=bleu, dist=dist, dirty_repo=dirty_repo)
 
     def summarize(self, fmt=None, verbose=False):
         if fmt is None:
@@ -497,20 +500,23 @@ class EditTrainingRun(TorchTrainingRun):
             big_str = 'big_' if big_eval else ''
 
             # compute metrics
-            loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, avg_dist, edit_traces = cls._compute_metrics(editor, examples, num_eval, noiser,
+            # loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, avg_dist, edit_traces = cls._compute_metrics(editor, examples, num_eval, noiser,
+            #                                                    edit_dropout=config.editor.edit_dropout,
+            #                                                    draw_samples=config.editor.enable_vae)
+            loss, avg_bleu, avg_dist, edit_traces = cls._compute_metrics(editor, examples, num_eval, noiser,
                                                                edit_dropout=config.editor.edit_dropout,
                                                                draw_samples=config.editor.enable_vae)
-
             # log
             log_value('loss_{}{}'.format(big_str, name), loss, train_steps)
             log_value('bleu_{}{}'.format(big_str, name), avg_bleu, train_steps)
-            log_value('gleu_{}{}'.format(big_str, name), avg_gleu, train_steps)
-            log_value('ribes_{}{}'.format(big_str, name), avg_ribes, train_steps)
-            log_value('chrf_{}{}'.format(big_str, name), avg_chrf, train_steps)
+            # log_value('gleu_{}{}'.format(big_str, name), avg_gleu, train_steps)
+            # log_value('ribes_{}{}'.format(big_str, name), avg_ribes, train_steps)
+            # log_value('chrf_{}{}'.format(big_str, name), avg_chrf, train_steps)
             log_value('dist_{}{}'.format(big_str, name), avg_dist, train_steps)
 
             print '=== {}{} ==='.format(big_str, name)
-            print 'loss: {}, bleu: {}, gleu: {}, ribes: {}, chrf: {}, dist: {}'.format(loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, avg_dist)
+            # print 'loss: {}, bleu: {}, gleu: {}, ribes: {}, chrf: {}, dist: {}'.format(loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, avg_dist)
+            print 'loss: {}, bleu: {}, dist: {}'.format(loss, avg_bleu, avg_dist)
 
             # print traces for the small evaluation
             if not big_eval:
@@ -548,13 +554,14 @@ class EditTrainingRun(TorchTrainingRun):
         for ex, output in izip(noised_sample, outputs):
             # outputs is a list(over batches)[ list(over beams) [ list(over tokens) [ unicode ] ] ] object.
             bleus.append(bleu(ex.target_words, output[0]))
-            gleus.append(gleu(ex.target_words, output[0]))
-            ribeses.append(ribes(ex.target_words, output[0]))
-            chrfs.append(chrf(ex.target_words, output[0]))
+            # gleus.append(gleu(ex.target_words, output[0]))
+            # ribeses.append(ribes(ex.target_words, output[0]))
+            # chrfs.append(chrf(ex.target_words, output[0]))
             dists.append(levenshtein_distance(ex.target_words, output[0]))
         avg_bleu = np.mean(bleus)
-        avg_gleu = np.mean(gleus)
-        avg_ribes = np.mean(ribeses)
-        avg_chrf = np.mean(chrfs)
+        # avg_gleu = np.mean(gleus)
+        # avg_ribes = np.mean(ribeses)
+        # avg_chrf = np.mean(chrfs)
         avg_dist = np.mean(dists)
-        return loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, avg_dist, edit_traces
+        # return loss, avg_bleu, avg_gleu, avg_ribes, avg_chrf, avg_dist, edit_traces
+        return loss, avg_bleu, avg_dist, edit_traces

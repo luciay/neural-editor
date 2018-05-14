@@ -23,11 +23,11 @@ editor {
     norm_max = 7.5
     kill_edit = True
     embed_sentence = False
-    wvec_path = poly/bach_300d.txt
+    wvec_path = poly_duration/bach_300d.txt
 }
 
 dataset {
     # this path should be relative to $SQUAD_ENTAILMENT_DATA
-    path = midi_split/poly/bach
+    path = midi_split/poly_duration/bach
     use_diff = True
 }
